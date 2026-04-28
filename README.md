@@ -8,6 +8,9 @@
 git clone https://github.com/ZXCurban/NetOrbit.git
 cd NetOrbit
 sudo pip install .
+python3 -m venv .
+source bin/activate
+pip install -r requirements.txt
 ```
 ### 2. Запуск
 
