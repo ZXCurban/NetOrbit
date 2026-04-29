@@ -2,21 +2,14 @@
 
 ## Быстрый старт
 
-### 1. Установка из релиза (рекомендуется)
-
-Перейди в раздел Releases на GitHub и скачай файл `.whl`.
-
-Затем установи:
+### 1. Установка 
 
 ```bash
-pip install netorbit-0.1.0-py3-none-any.whl
+pipx install git+https://github.com/ZXCurban/NetOrbit.git
 ```
-### 2. Установка из исходников
+### 2. Запуск
 
 ```bash
-git clone https://github.com/ZXCurban/NetOrbit.git
-cd NetOrbit
-sudo pip install .
 netorbit
 ```
 
