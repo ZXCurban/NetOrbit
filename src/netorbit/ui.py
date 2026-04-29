@@ -5,7 +5,9 @@ from collections import deque
 from dataclasses import dataclass
 from queue import Empty, Queue
 
+from rich.align import Align
 from rich.console import Console, Group
+
 from rich.live import Live
 from rich.panel import Panel
 from rich.table import Table
@@ -28,6 +30,21 @@ class DestinationMarker:
 
     def alive(self, now: float) -> bool:
         return self.progress(now) < 1.0
+
+
+def show_welcome() -> None:
+    console = Console()
+    welcome_text = Text("\nNetOrbit\n", style="bold cyan", justify="center")
+    welcome_text.append("Real-time Network Traffic Visualizer\n", style="bright_black")
+    welcome_text.append("\nPress Ctrl+C to exit", style="dim")
+    
+    panel = Panel(
+        Align.center(welcome_text),
+        border_style="cyan",
+        expand=False
+    )
+    console.print(Align.center(panel))
+    time.sleep(2)
 
 
 class NetOrbitUI:

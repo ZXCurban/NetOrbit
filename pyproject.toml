@@ -4,12 +4,15 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "netorbit"
-version = "0.1.0"
+version = "0.2.0"
 description = "Network traffic visualization tool"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "scapy",
+    "scapy>=2.5.0",
+    "requests>=2.31.0",
+    "rich>=13.7.0",
+    "textual>=0.80.0",
 ]
 
 authors = [

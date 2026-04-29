@@ -15,7 +15,8 @@ from .sniffer import (
     list_ipv4_interfaces,
     run_source_in_thread,
 )
-from .ui import NetOrbitUI
+from .ui import NetOrbitUI, show_welcome
+
 
 
 DEMO_GEO = (
@@ -62,7 +63,9 @@ def main() -> None:
         geo.prime(DEMO_GEO)
 
     run_source_in_thread(source, queue)
+    show_welcome()
     ui = NetOrbitUI(
+
         event_queue=queue,
         geo=geo,
         home=home,
