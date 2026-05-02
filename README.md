@@ -1,8 +1,9 @@
+
+<h1 align="center">NetOrbit</h1>
+
 <p align="center">
   <img src="https://github.com/user-attachments/assets/b671d9c6-f5d9-44c7-9480-26d15b6f5606" alt="NetOrbit live terminal packet map demo" width="960">
 </p>
-
-<h1 align="center">NetOrbit</h1>
 
 <p align="center">
   <strong>Real-time global packet visualization in your terminal.</strong>
@@ -12,8 +13,6 @@
   <a href="https://www.python.org/downloads/"><img alt="Python 3.10+" src="https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white"></a>
   <a href="https://opensource.org/license/mit"><img alt="License MIT" src="https://img.shields.io/badge/License-MIT-00E676?style=for-the-badge"></a>
   <img alt="Fedora Support" src="https://img.shields.io/badge/Fedora-supported-51A2DA?style=for-the-badge&logo=fedora&logoColor=white">
-  <img alt="TUI Rich" src="https://img.shields.io/badge/TUI%2FRich-terminal_native-00D9FF?style=for-the-badge">
-  <img alt="Textual Rich" src="https://img.shields.io/badge/Textual%2FRich-neon_console-FF00AA?style=for-the-badge">
 </p>
 
 <p align="center">
@@ -34,20 +33,6 @@ It is built for people who want network awareness without leaving the shell. No 
 - ⚡ **Real-time tracking:** Scapy captures traffic asynchronously while the TUI keeps rendering.
 - 🧬 **Pure terminal aesthetics:** high-density Braille pixels, neon-style traces, and Rich-powered panels.
 - 🧊 **Low CPU footprint:** static map caching keeps warm renders fast, measured at **0.0044s**.
-
-## One-Command Install
-
-Use `pipx` to install NetOrbit as an isolated CLI tool:
-
-```bash
-pipx install git+https://github.com/ZXCurban/NetOrbit.git
-```
-
-Then launch packet capture with root privileges:
-
-```bash
-sudo netorbit
-```
 
 > [!IMPORTANT]
 > Root is required because NetOrbit captures packets through Scapy. On Linux, NetOrbit can also re-run itself through `sudo` when capture privileges are missing.
@@ -142,20 +127,6 @@ NetOrbit превращает исходящий IPv4-трафик в визуа
 - ⚡ **Отслеживание в реальном времени:** Scapy асинхронно ловит пакеты, пока TUI продолжает рендеринг.
 - 🧬 **Чистая терминальная эстетика:** плотные Braille-пиксели, неоновые трассы и панели на Rich.
 - 🧊 **Низкая нагрузка на CPU:** кэш статической карты дает быстрый теплый рендер, измерено **0.0044s**.
-
-## Установка в одну команду
-
-Используйте `pipx`, чтобы установить NetOrbit как изолированный CLI-инструмент:
-
-```bash
-pipx install git+https://github.com/ZXCurban/NetOrbit.git
-```
-
-Запуск реального захвата пакетов требует root-доступ:
-
-```bash
-sudo netorbit
-```
 
 > [!IMPORTANT]
 > Root нужен потому, что NetOrbit захватывает пакеты через Scapy. На Linux приложение также может автоматически перезапуститься через `sudo`, если прав для захвата не хватает.
