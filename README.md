@@ -1,90 +1,237 @@
-# NetOrbit
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/b671d9c6-f5d9-44c7-9480-26d15b6f5606" alt="NetOrbit live terminal packet map demo" width="960">
+</p>
 
-## Быстрый старт
+<h1 align="center">NetOrbit</h1>
 
-### 1. Установка 
+<p align="center">
+  <strong>Real-time global packet visualization in your terminal.</strong>
+</p>
+
+<p align="center">
+  <a href="https://www.python.org/downloads/"><img alt="Python 3.10+" src="https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white"></a>
+  <a href="https://opensource.org/license/mit"><img alt="License MIT" src="https://img.shields.io/badge/License-MIT-00E676?style=for-the-badge"></a>
+  <img alt="Fedora Support" src="https://img.shields.io/badge/Fedora-supported-51A2DA?style=for-the-badge&logo=fedora&logoColor=white">
+  <img alt="TUI Rich" src="https://img.shields.io/badge/TUI%2FRich-terminal_native-00D9FF?style=for-the-badge">
+  <img alt="Textual Rich" src="https://img.shields.io/badge/Textual%2FRich-neon_console-FF00AA?style=for-the-badge">
+</p>
+
+<p align="center">
+  <code>Scapy</code> packet capture · <code>Textual/Rich</code> terminal aesthetic · Braille world map · live GeoIP telemetry
+</p>
+
+---
+
+## English
+
+## Why NetOrbit?
+
+NetOrbit turns raw outbound IPv4 traffic into visual intelligence. Every external packet becomes a signal on a terminal-native world map: where your machine is talking, how fast destinations appear, and what routes light up while you work.
+
+It is built for people who want network awareness without leaving the shell. No browser dashboard. No heavy desktop UI. Just a cyberpunk command center running directly in your terminal.
+
+- 🛰️ **Visual intelligence:** watch outbound connections land on a global map instead of reading dead packet logs.
+- ⚡ **Real-time tracking:** Scapy captures traffic asynchronously while the TUI keeps rendering.
+- 🧬 **Pure terminal aesthetics:** high-density Braille pixels, neon-style traces, and Rich-powered panels.
+- 🧊 **Low CPU footprint:** static map caching keeps warm renders fast, measured at **0.0044s**.
+
+## One-Command Install
+
+Use `pipx` to install NetOrbit as an isolated CLI tool:
 
 ```bash
 pipx install git+https://github.com/ZXCurban/NetOrbit.git
 ```
-### 2. Запуск
+
+Then launch packet capture with root privileges:
 
 ```bash
-netorbit
+sudo netorbit
 ```
 
->⚠️ Важно
->
->NetOrbit использует перехват сетевых пакетов (Scapy), поэтому:
->
->требуется root-доступ
->программа может автоматически перезапускаться через sudo
+> [!IMPORTANT]
+> Root is required because NetOrbit captures packets through Scapy. On Linux, NetOrbit can also re-run itself through `sudo` when capture privileges are missing.
 
-## Цель
-Создать интерактивное терминальное приложение (TUI) для мониторинга сетевой активности в реальном времени. Инструмент визуализирует исходящий трафик пользователя на ASCII-карте мира, отмечая кружками текущую точку пользователя и географические точки IP-адресов назначения.
+## Quick Start
 
-## MVP
-- Захват исходящих IPv4 пакетов в реальном времени.
-- Определение географических координат (Lat/Lon) целевых IP-адресов.
-- Отрисовка детализированной Braille-карты мира в терминале.
-- Динамическое отображение кружков в точках отправления и назначения.
-- Панель со списком последних 10 соединений (IP, Страна, Протокол).
+```bash
+# Install
+pipx install git+https://github.com/ZXCurban/NetOrbit.git
 
-## Входные данные
-- **Сетевой интерфейс:** (например, `eth0` или `wlan0`) для прослушивания трафика.
-- **База GeoIP:** Локальная база MaxMind или доступ к API (например, ip-api.com) для получения координат.
-- **Карта мира:** Встроенная Braille-карта в equirectangular-проекции, сгенерированная по данным Natural Earth.
+# Run live capture
+sudo netorbit
+```
 
-## Выходные данные
-- **Основное окно:** Braille-карта мира с координатной сеткой, home-маркером и кружками назначений трафика.
-- **Информационные панели:** Статистика трафика, страна назначения, объем переданных данных.
-
-## Логика работы
-1. **Sniffing:** Программа запускает асинхронный поток захвата пакетов через `Scapy`.
-2. **Filtering:** Игнорируются локальные адреса (192.168.x.x, 127.0.0.1) и широковещательные пакеты.
-3. **Geolocating:** Для каждого внешнего IP определяется широта и долгота.
-4. **Projection:** Координаты (Lat, Lon) переводятся в координаты символов на карте функцией `geo_to_canvas`.
-5. **Layering:** Карта, координатная сетка, home-маркер, точки назначения и будущие траектории рендерятся отдельными слоями.
-6. **Rendering:** Интерфейс обновляется со скоростью 30-60 FPS для плавного появления и исчезновения маркеров.
-
-## Архитектура
-- **Module `sniffer.py`:** Асинхронный генератор пакетов.
-- **Module `geo_engine.py`:** Кэширующий слой для работы с GeoIP (чтобы не запрашивать один и тот же IP дважды).
-- **Module `math_utils.py`:** Функции проекции координат на карту.
-- **Module `ui.py`:** Отрисовка TUI с использованием Rich.
-- **Module `world_map.py`:** Textual/Rich-компонент Braille-карты мира.
-
-## Формат данных
-- **Пакет данных (внутренний):**
-  ```json
-  {
-    "src_ip": "192.168.1.5",
-    "dst_ip": "1.1.1.1",
-    "coords": {"lat": 48.8566, "lon": 2.3522},
-    "country": "France",
-    "protocol": "TCP",
-    "size": 1400
-  }
-  ```
-
-## Запуск приложения
-
-По умолчанию NetOrbit сам определяет сетевой интерфейс через таблицу маршрутизации. Для реального захвата пакетов на Linux нужны root-права, поэтому скрипт автоматически перезапускается через `sudo`, если запущен обычным пользователем.
-
-В VPN/туннельных сценариях NetOrbit слушает сразу интерфейс policy-route и обычный default-route, например `tun0,wlo1`. Проверить выбор можно так:
+Need to inspect available network interfaces first?
 
 ```bash
 netorbit --list-interfaces
 ```
 
-Проверить интерфейс без root и реального трафика можно demo-режимом:
+Want the visual experience without root or real traffic?
 
 ```bash
 netorbit --demo
 ```
 
-Если нужно принудительно выбрать несколько интерфейсов:
+Force a specific interface or a VPN + default-route pair:
 
 ```bash
-netorbit -i tun0,wlo1
+sudo netorbit -i tun0,wlo1
 ```
+
+## Key Features
+
+- 🌍 **Braille-rendered world map** with dense terminal pixels and a coordinate grid.
+- 🎯 **Sub-pixel accuracy** through a virtual 2x4 Braille dot layer.
+- 📡 **Async Scapy sniffing** for live outbound IPv4 capture without blocking the UI.
+- 🧠 **GeoIP resolution** via MaxMind-compatible workflows and IP-API fallback.
+- 🔥 **Live destination traces** from your home point to remote IP locations.
+- 🧾 **Recent connection panel** with IP, country, protocol, size, and interface data.
+- 🛡️ **Smart filtering** for local, private, multicast, and broadcast addresses.
+- ❄️ **Low CPU footprint** with cached static map layers and **0.0044s warm render**.
+
+## Tech Stack
+
+| Layer | Technology |
+| --- | --- |
+| Runtime | Python 3.10+ |
+| Terminal UI | Textual/Rich terminal aesthetic, implemented with Rich rendering |
+| Packet capture | Scapy `AsyncSniffer` |
+| Geolocation | MaxMind-ready architecture / IP-API |
+| Rendering | Braille canvas, cached world mask, sub-pixel trajectories |
+
+## Commands
+
+```bash
+netorbit --help
+netorbit --list-interfaces
+netorbit --demo
+sudo netorbit
+sudo netorbit -i eth0
+sudo netorbit -i tun0,wlo1
+```
+
+## How It Works
+
+1. NetOrbit detects one or more capture interfaces from your routing table.
+2. Scapy streams outbound IPv4 packets into an async pipeline.
+3. Local and non-routable destinations are filtered out.
+4. GeoIP lookup resolves remote IPs to latitude, longitude, country, and city.
+5. The renderer projects coordinates onto a cached Braille world map.
+6. Rich updates the terminal with active traces and recent connection telemetry.
+
+## Requirements
+
+- Linux recommended, Fedora supported.
+- Python **3.10+**.
+- `pipx` for clean CLI installation.
+- Root privileges for real packet capture.
+
+---
+
+## Русский
+
+## Почему NetOrbit?
+
+NetOrbit превращает исходящий IPv4-трафик в визуальную разведку. Каждый внешний пакет становится сигналом на терминальной карте мира: куда говорит ваша машина, какие направления вспыхивают в реальном времени и как выглядит сеть прямо из shell.
+
+Это инструмент для тех, кому нужна сетевая осведомленность без браузерных панелей и тяжелого UI. Только терминал, живая карта и киберпанковский командный центр в одну команду.
+
+- 🛰️ **Визуальная разведка:** внешние соединения видны на карте, а не теряются в сухих логах.
+- ⚡ **Отслеживание в реальном времени:** Scapy асинхронно ловит пакеты, пока TUI продолжает рендеринг.
+- 🧬 **Чистая терминальная эстетика:** плотные Braille-пиксели, неоновые трассы и панели на Rich.
+- 🧊 **Низкая нагрузка на CPU:** кэш статической карты дает быстрый теплый рендер, измерено **0.0044s**.
+
+## Установка в одну команду
+
+Используйте `pipx`, чтобы установить NetOrbit как изолированный CLI-инструмент:
+
+```bash
+pipx install git+https://github.com/ZXCurban/NetOrbit.git
+```
+
+Запуск реального захвата пакетов требует root-доступ:
+
+```bash
+sudo netorbit
+```
+
+> [!IMPORTANT]
+> Root нужен потому, что NetOrbit захватывает пакеты через Scapy. На Linux приложение также может автоматически перезапуститься через `sudo`, если прав для захвата не хватает.
+
+## Быстрый старт
+
+```bash
+# Установка
+pipx install git+https://github.com/ZXCurban/NetOrbit.git
+
+# Запуск live-захвата
+sudo netorbit
+```
+
+Посмотреть доступные сетевые интерфейсы:
+
+```bash
+netorbit --list-interfaces
+```
+
+Запустить визуальный режим без root и реального трафика:
+
+```bash
+netorbit --demo
+```
+
+Принудительно выбрать интерфейс или пару VPN + default-route:
+
+```bash
+sudo netorbit -i tun0,wlo1
+```
+
+## Ключевые возможности
+
+- 🌍 **Карта мира на Braille** с плотной терминальной графикой и координатной сеткой.
+- 🎯 **Sub-pixel accuracy** через виртуальный слой Braille 2x4 точек.
+- 📡 **Асинхронный Scapy-sniffing** для live-захвата исходящих IPv4-пакетов без блокировки UI.
+- 🧠 **GeoIP-резолвинг** с архитектурой под MaxMind и fallback через IP-API.
+- 🔥 **Живые трассы назначений** от вашей home-точки к удаленным IP.
+- 🧾 **Панель последних соединений** с IP, страной, протоколом, размером и интерфейсом.
+- 🛡️ **Умная фильтрация** локальных, приватных, multicast и broadcast-адресов.
+- ❄️ **Низкая нагрузка на CPU** благодаря кэшу статических слоев карты и **0.0044s warm render**.
+
+## Технологический стек
+
+| Слой | Технология |
+| --- | --- |
+| Runtime | Python 3.10+ |
+| Terminal UI | Textual/Rich terminal aesthetic, implemented with Rich rendering |
+| Захват пакетов | Scapy `AsyncSniffer` |
+| Геолокация | MaxMind-ready architecture / IP-API |
+| Рендеринг | Braille canvas, cached world mask, sub-pixel trajectories |
+
+## Команды
+
+```bash
+netorbit --help
+netorbit --list-interfaces
+netorbit --demo
+sudo netorbit
+sudo netorbit -i eth0
+sudo netorbit -i tun0,wlo1
+```
+
+## Как это работает
+
+1. NetOrbit определяет один или несколько интерфейсов захвата по таблице маршрутизации.
+2. Scapy передает исходящие IPv4-пакеты в асинхронный pipeline.
+3. Локальные и неротируемые адреса отфильтровываются.
+4. GeoIP lookup превращает удаленный IP в широту, долготу, страну и город.
+5. Рендерер проецирует координаты на кэшированную Braille-карту мира.
+6. Rich обновляет терминал активными трассами и телеметрией последних соединений.
+
+## Требования
+
+- Рекомендуется Linux, Fedora поддерживается.
+- Python **3.10+**.
+- `pipx` для чистой CLI-установки.
+- Root-доступ для реального захвата пакетов.

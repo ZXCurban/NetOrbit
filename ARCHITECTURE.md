@@ -4,8 +4,8 @@
 
 1. `src.sniffer` получает исходящие IPv4 пакеты.
 2. `src.geo_engine` отбрасывает локальные адреса и резолвит внешний IP в координаты.
-3. `src.math_utils` переводит Lat/Lon в координаты ASCII-карты.
-4. `src.ui` рисует Braille-карту, home-точку, активные кружки назначений и последние 10 соединений.
+3. `src.world_map` переводит Lat/Lon в координаты Braille-карты и виртуального 2x4-dot слоя.
+4. `src.ui` рисует Braille-карту, home-точку, активные траектории назначений и последние 10 соединений.
 5. `src.cli` связывает компоненты, читает аргументы запуска и включает demo-режим.
 
 ## Компоненты
@@ -14,10 +14,9 @@
 - `src/cli.py`: CLI, конфигурация home-координат, интерфейса и FPS.
 - `src/models.py`: внутренние структуры данных пакетов, геолокации и соединений.
 - `src/sniffer.py`: источник событий. Поддерживает автоопределение одного или нескольких сетевых интерфейсов, Scapy-sniffing и `--demo`.
-- `src/geo_engine.py`: кэширующий GeoIP-слой через `ip-api.com`.
-- `src/math_utils.py`: дополнительные геометрические функции.
+- `src/geo_engine.py`: ограниченный кэширующий GeoIP-слой через `ip-api.com`.
 - `src/ui.py`: Rich Live TUI с картой и таблицей последних соединений.
-- `src/world_map.py`: Textual `Static`/Rich-компонент Braille-карты мира, `geo_to_canvas`, coordinate grid, truecolor-слои и встроенный Natural Earth land-mask.
+- `src/world_map.py`: Rich-компонент Braille-карты мира, `geo_to_canvas`, coordinate grid, truecolor-слои, кэш статической карты и встроенный Natural Earth land-mask.
 
 ## Следующие шаги
 

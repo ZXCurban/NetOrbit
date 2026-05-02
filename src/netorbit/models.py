@@ -4,13 +4,13 @@ from dataclasses import dataclass
 from time import time
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class GeoPoint:
     lat: float
     lon: float
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class GeoResult:
     ip: str
     point: GeoPoint
@@ -18,7 +18,7 @@ class GeoResult:
     city: str = ""
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class PacketEvent:
     src_ip: str
     dst_ip: str
@@ -40,7 +40,7 @@ class PacketEvent:
         )
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class ConnectionEvent:
     src_ip: str
     dst_ip: str
@@ -52,7 +52,7 @@ class ConnectionEvent:
     created_at: float
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class StatusEvent:
     message: str
     level: str = "info"
@@ -64,4 +64,4 @@ class StatusEvent:
         return StatusEvent(self.message, self.level, time())
 
 
-NetOrbitEvent = PacketEvent | StatusEvent
+NetOrbitEvent = ConnectionEvent | StatusEvent

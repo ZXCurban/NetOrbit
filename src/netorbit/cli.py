@@ -11,12 +11,12 @@ from .models import GeoPoint, GeoResult, NetOrbitEvent
 from .sniffer import (
     DemoPacketSource,
     PacketSniffer,
+    UI_QUEUE_SIZE,
     detect_capture_interfaces,
     list_ipv4_interfaces,
-    run_source_in_thread,
+    run_source_pipeline,
 )
 from .ui import NetOrbitUI, show_welcome
-
 
 
 DEMO_GEO = (
@@ -30,13 +30,35 @@ DEMO_GEO = (
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="NetOrbit: live terminal map for outgoing IPv4 traffic.")
-    parser.add_argument("-i", "--interface", help="Network interface(s) to sniff, e.g. wlo1 or tun0,wlo1.")
-    parser.add_argument("--home-lat", type=float, help="Home latitude. Defaults to local public IP geolocation.")
-    parser.add_argument("--home-lon", type=float, help="Home longitude. Defaults to local public IP geolocation.")
+    parser = argparse.ArgumentParser(
+        description="NetOrbit: live terminal map for outgoing IPv4 traffic."
+    )
+    parser.add_argument(
+        "-i",
+        "--interface",
+        help="Network interface(s) to sniff, e.g. wlo1 or tun0,wlo1.",
+    )
+    parser.add_argument(
+        "--home-lat",
+        type=float,
+        help="Home latitude. Defaults to local public IP geolocation.",
+    )
+    parser.add_argument(
+        "--home-lon",
+        type=float,
+        help="Home longitude. Defaults to local public IP geolocation.",
+    )
     parser.add_argument("--fps", type=int, default=12, help="TUI refresh rate.")
-    parser.add_argument("--demo", action="store_true", help="Use generated packet events instead of Scapy.")
-    parser.add_argument("--list-interfaces", action="store_true", help="Print detected IPv4 interfaces and exit.")
+    parser.add_argument(
+        "--demo",
+        action="store_true",
+        help="Use generated packet events instead of Scapy.",
+    )
+    parser.add_argument(
+        "--list-interfaces",
+        action="store_true",
+        help="Print detected IPv4 interfaces and exit.",
+    )
     parser.add_argument(
         "--no-auto-sudo",
         action="store_true",
@@ -51,10 +73,14 @@ def main() -> None:
         print_interfaces()
         return
 
-    interfaces = [item.strip() for item in args.interface.split(",")] if args.interface else detect_capture_interfaces()
+    interfaces = (
+        [item.strip() for item in args.interface.split(",")]
+        if args.interface
+        else detect_capture_interfaces()
+    )
     ensure_capture_privileges(args, interfaces)
 
-    queue: Queue[NetOrbitEvent] = Queue()
+    queue: Queue[NetOrbitEvent] = Queue(maxsize=UI_QUEUE_SIZE)
     geo = GeoEngine()
     home = resolve_home_point(args, geo)
     source = DemoPacketSource() if args.demo else PacketSniffer(interfaces)
@@ -62,12 +88,10 @@ def main() -> None:
     if args.demo:
         geo.prime(DEMO_GEO)
 
-    run_source_in_thread(source, queue)
+    run_source_pipeline(source, queue, geo)
     show_welcome()
     ui = NetOrbitUI(
-
         event_queue=queue,
-        geo=geo,
         home=home,
         fps=max(1, min(args.fps, 60)),
     )
